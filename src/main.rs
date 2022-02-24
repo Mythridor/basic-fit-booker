@@ -1,6 +1,6 @@
 mod wrapper;
+use crate::wrapper::flow::login;
 
 fn main() {
-    println!("Hello, world!");
-    wrapper::login("test","test");
+    login("test@test.com".to_string(),"test".to_string());
 }
