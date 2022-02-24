@@ -1,34 +1,27 @@
-mod wrapper {
-    pub mod flow {
+pub mod flow {
+    use reqwest::header::HeaderMap;
+    use reqwest;
+    use std::collections::HashMap;
 
-        #[tokio::main]
-         pub async fn login (email: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn login (email: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+        let mut headers = HeaderMap::new();
+        let mut body    = HashMap::new();
 
-        let mut body = object!{
-            "email": email
-            "password": password
-        };
+        headers.insert("Host", "bfa-login.basic-fit.com".parse().unwrap());
+        headers.insert("content-type", "application/json".parse().unwrap());
+        headers.insert("accept", "application/json".parse().unwrap());
+        headers.insert("user-agent", "Basic Fit App/1.3.1.0 (iOS)".parse().unwrap());
+        headers.insert("accept-language", "en-GB,en;q=0.9".parse().unwrap());
 
-        let mut headers = object!{
-            "Host": "bfa-login.basic-fit.com",
-            "content-type": "application/json",
-            "accept": "application/json",
-            "user-agent": "Basic Fit App/1.3.1.0 (iOS)",
-            "accept-language": "en-GB,en;q=0.9",
-        };
+        body.insert("email", email);
+        body.insert("password", password);
 
-        let mut client = reqwest::Client::new();
-
-        let resp = client::post("https://bfa-login.basic-fit.com/login")
-            .body(body)
+        let response = reqwest::Client::new().post("https://bfa-login.basic-fit.com/login")
             .headers(headers)
             .send()
-            .await?
-            .json::<std::collections::HashMap<String, String>>()
-            .await?; 
-
-        println!("{:#?}", resp);
+            .await?;
+        
+        println!("{:#?}", response);
         Ok(())
     }
-}
 }
