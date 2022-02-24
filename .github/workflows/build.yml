@@ -1,0 +1,26 @@
+name: Build
+on: 
+  push:
+     branches: [dev]
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🔎 The name of your branch is ${{ github.ref }}."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to build the code on the runner."
+      - name: echo "Switching to rustup nightly.."
+        run: |
+          rustup default nightly
+      - name: echo "Building ${{ github.ref }} with cargo build.."
+        run: |
+          cargo build --verbose
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
